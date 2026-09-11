@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B0%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#0B1130;
+    --sky-bottom:#1E2A55;
+    --ink:#ECE9F7;
+    --ink-soft:rgba(236,233,247,0.62);
+    --accent:#F5B860;
+    --hairline:rgba(236,233,247,0.16);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--ink);
+    transition:color .8s ease;
+  }
+
+  #sky{
+    position:fixed;
+    inset:0;
+    z-index:-3;
+    background:linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+  }
+
+  #stars{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    overflow:hidden;
+    opacity:0;
+    transition:opacity 1.2s ease;
+  }
+  .star{
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+    animation:twinkle 3.5s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:.25; }
+    50%{ opacity:1; }
+  }
+
+  .orb{
+    position:fixed;
+    z-index:-1;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    transition:opacity 1s ease;
+    pointer-events:none;
+  }
+  #sun{
+    width:64px; height:64px;
+    background:radial-gradient(circle at 35% 30%, #FFE9C2, #F5B860 60%, #E8934A 100%);
+    box-shadow:0 0 70px 18px rgba(245,184,96,0.55);
+  }
+  #moon{
+    width:52px; height:52px;
+    background:radial-gradient(circle at 35% 30%, #F4F6FB, #C9D6EA 65%, #93A6C4 100%);
+    box-shadow:0 0 50px 12px rgba(201,214,234,0.4);
+  }
+
+  .page{
+    position:relative;
+    z-index:1;
+    max-width:640px;
+    margin:0 auto;
+    padding:12vh 24px 10vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    min-height:100vh;
+  }
+
+  .status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin-bottom:1.4rem;
+    letter-spacing:.02em;
+  }
+  .status .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 8px 1px var(--accent);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.5; transform:scale(.85); }
+    50%{ opacity:1; transform:scale(1); }
+  }
+
+  .clock{
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:clamp(2.6rem, 9vw, 4.4rem);
+    letter-spacing:.01em;
+    line-height:1;
+  }
+  .colon{ animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:.25; } }
+  .ampm{
+    font-size:.4em;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    vertical-align:middle;
+  }
+
+  .date-line{
+    margin-top:.6rem;
+    font-size:.95rem;
+    color:var(--ink-soft);
+  }
+
+  .divider{
+    width:48px;
+    height:1px;
+    background:var(--hairline);
+    margin:3rem 0;
+    transition:background .8s ease;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(2.2rem, 6vw, 3rem);
+    margin:0 0 .5rem;
+    font-optical-sizing:auto;
+  }
+  .tagline{
+    font-size:1.05rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  .about{
+    text-align:left;
+    max-width:480px;
+    margin-top:2.6rem;
+  }
+  .about p{
+    font-size:1.02rem;
+    line-height:1.65;
+    color:var(--ink);
+    margin:0;
+  }
+
+  .links{
+    text-align:left;
+    max-width:480px;
+    width:100%;
+    margin-top:2.6rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .links a{
+    position:relative;
+    display:inline-flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:.85rem 0;
+    color:var(--ink);
+    text-decoration:none;
+    font-size:1.05rem;
+    border-bottom:1px solid var(--hairline);
+    transition:border-color .8s ease;
+  }
+  .links a:last-child{ border-bottom:none; }
+  .links a span.sub{
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+  .links a::before{
+    content:"";
+    position:absolute;
+    left:0; bottom:-1px;
+    width:100%;
+    height:1px;
+    background:var(--accent);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .25s ease;
+  }
+  .links a:hover::before,
+  .links a:focus-visible::before{
+    transform:scaleX(1);
+  }
+  a:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:4px;
+    border-radius:2px;
+  }
+
+  footer{
+    margin-top:4rem;
+    font-size:.8rem;
+    color:var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .star, .status .dot, .colon{ animation:none !important; }
+    .orb{ transition:none; }
+  }
+
+  @media (max-width:480px){
+    .about, .links{ max-width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="sky"></div>
+<div id="stars"></div>
+<div id="sun" class="orb"></div>
+<div id="moon" class="orb"></div>
+
+<main class="page">
+
+  <div class="status">
+    <span class="dot"></span>
+    <span id="phase-label">Live</span>
+    <span id="tz-label"></span>
+  </div>
+
+  <div class="clock" id="clock">00<span class="colon">:</span>00<span class="colon">:</span>00</div>
+  <div class="date-line" id="date-line">Loading date…</div>
+
+  <div class="divider"></div>
+
+  
+  <h1>R</h1>
+  <p class="tagline">I like your funny words magic man.</p>
+
+ 
+  <section class="about">
+    <p>
+     There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
+    </p>
+  </section>
+
+
+  <nav class="links">
+    <a href="https://github.com/blueapple-png" target="_blank" rel="noopener">
+      GitHub <span class="sub">@Blueapple</span>
+    </a>
+    <a href="https://discord.com/users/260761613089505280" target="_blank" rel="noopener">
+      Discord <span class="sub">@84721
+</span>
+    </a>
+  </nav>
+
+  <footer>The sky above tracks the real time where you're viewing this.</footer>
+
+</main>
+
+<script>
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const stops = [
+    [0,  [11,17,48],   [30,42,85]],
+    [4,  [22,33,74],   [43,58,107]],
+    [6,  [247,201,169],[253,231,208]],
+    [8,  [143,208,236],[234,246,255]],
+    [12, [110,193,232],[227,244,255]],
+    [17, [127,184,217],[252,227,198]],
+    [19, [74,59,107],  [242,150,107]],
+    [21, [28,29,69],   [58,46,92]],
+    [24, [11,17,48],   [30,42,85]]
+  ];
+
+  function lerp(a,b,t){ return a + (b-a)*t; }
+  function lerpRGB(c1,c2,t){
+    return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)];
+  }
+  function rgbStr(c){ return `rgb(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])})`; }
+
+  function skyAt(hour){
+    for(let i=0;i<stops.length-1;i++){
+      const [h0,t0,b0] = stops[i];
+      const [h1,t1,b1] = stops[i+1];
+      if(hour>=h0 && hour<=h1){
+        const t = (hour-h0)/(h1-h0);
+        return { top: lerpRGB(t0,t1,t), bottom: lerpRGB(b0,b1,t) };
+      }
+    }
+    return { top: stops[0][1], bottom: stops[0][2] };
+  }
+
+  function clamp(v,min,max){ return Math.max(min, Math.min(max,v)); }
+
+  function crossfade(hour, riseCenter, setCenter){
+ 
+    let h = hour;
+    if(setCenter < riseCenter) h = h < riseCenter ? h+24 : h; // wraparound not needed here, kept simple
+    const riseIn = clamp((h-(riseCenter-0.5))/1,0,1);
+    const setOut = clamp((( (setCenter+0.5) - h))/1,0,1);
+    return clamp(Math.min(riseIn,setOut),0,1);
+  }
+
+  const skyEl = document.getElementById('sky');
+  const sunEl = document.getElementById('sun');
+  const moonEl = document.getElementById('moon');
+  const starsEl = document.getElementById('stars');
+  const clockEl = document.getElementById('clock');
+  const dateEl = document.getElementById('date-line');
+  const phaseEl = document.getElementById('phase-label');
+  const tzEl = document.getElementById('tz-label');
+
+  const STAR_COUNT = 70;
+  const starData = [];
+  for(let i=0;i<STAR_COUNT;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random()*2 + 1;
+    const left = Math.random()*100;
+    const top = Math.random()*70;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = left+'vw';
+    s.style.top = top+'vh';
+    if(!reduceMotion){
+      s.style.animationDelay = (Math.random()*3.5)+'s';
+      s.style.animationDuration = (2.5+Math.random()*3)+'s';
+    } else {
+      s.style.animation = 'none';
+      s.style.opacity = '0.7';
+    }
+    starsEl.appendChild(s);
+  }
+
+  function shortTz(date){
+    try{
+      const parts = new Intl.DateTimeFormat(undefined, { timeZoneName:'short' }).formatToParts(date);
+      const tz = parts.find(p => p.type === 'timeZoneName');
+      return tz ? tz.value : '';
+    }catch(e){ return ''; }
+  }
+
+  function phaseLabel(hour){
+    if(hour<5) return 'Deep night';
+    if(hour<6.5) return 'Dawn';
+    if(hour<12) return 'Morning';
+    if(hour<17) return 'Afternoon';
+    if(hour<18.5) return 'Sunset';
+    if(hour<21) return 'Dusk';
+    return 'Night';
+  }
+
+  function pad(n){ return n.toString().padStart(2,'0'); }
+
+  function tick(){
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    const hourFloat = h + m/60 + s/3600;
+
+    let displayHour = h % 12;
+    if(displayHour === 0) displayHour = 12;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    clockEl.innerHTML = `${pad(displayHour)}<span class="colon">:</span>${pad(m)}<span class="colon">:</span>${pad(s)} <span class="ampm">${ampm}</span>`;
+    dateEl.textContent = now.toLocaleDateString(undefined, { weekday:'long', month:'long', day:'numeric' });
+    phaseEl.textContent = phaseLabel(hourFloat);
+    tzEl.textContent = '· ' + shortTz(now);
+
+    
+    const { top, bottom } = skyAt(hourFloat);
+    skyEl.style.background = `linear-gradient(to bottom, ${rgbStr(top)}, ${rgbStr(bottom)})`;
+
+    
+    const lum = 0.299*bottom[0] + 0.587*bottom[1] + 0.114*bottom[2];
+    const dark = lum > 150;
+    document.documentElement.style.setProperty('--ink', dark ? '#14213D' : '#ECE9F7');
+    document.documentElement.style.setProperty('--ink-soft', dark ? 'rgba(20,33,61,0.62)' : 'rgba(236,233,247,0.62)');
+    document.documentElement.style.setProperty('--hairline', dark ? 'rgba(20,33,61,0.16)' : 'rgba(236,233,247,0.16)');
+    document.documentElement.style.setProperty('--accent', dark ? '#D9772F' : '#F5B860');
+
+   
+    const nightAlpha = 1 - crossfade(hourFloat, 6, 18);
+    starsEl.style.opacity = nightAlpha;
+
+    
+    const sunAlpha = crossfade(hourFloat, 6, 18);
+    const sunProgress = clamp((hourFloat-6)/12, 0, 1);
+    positionOrb(sunEl, sunProgress, sunAlpha);
+
+  
+    let moonHour = hourFloat < 12 ? hourFloat + 24 : hourFloat; // shift early-morning hours forward
+    const moonProgress = clamp((moonHour-18)/12, 0, 1);
+    const moonAlpha = 1 - sunAlpha;
+    positionOrb(moonEl, moonProgress, moonAlpha);
+  }
+
+  function positionOrb(el, progress, alpha){
+    const x = 8 + progress*84;           // vw
+    const y = 72 - Math.sin(progress*Math.PI)*54; // vh
+    el.style.left = x+'vw';
+    el.style.top = y+'vh';
+    el.style.opacity = alpha;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
